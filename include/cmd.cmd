@@ -1,0 +1,1 @@
+del *.cpp /Q /S
