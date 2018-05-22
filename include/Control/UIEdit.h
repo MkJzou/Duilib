@@ -46,6 +46,11 @@ namespace DuiLib
 		void SetNativeEditBkColor(DWORD dwBkColor);
 		DWORD GetNativeEditBkColor() const;
 
+        void SetTipValue(LPCTSTR pstrTipValue);
+        LPCTSTR GetTipValue();
+        void SetTipValueColor(DWORD clrColor);
+        DWORD GetTipValueColor();
+
 		void SetSel(long nStartChar, long nEndChar);
 		void SetSelAll();
 		void SetReplaceSel(LPCTSTR lpszReplace);
@@ -72,6 +77,9 @@ namespace DuiLib
 		UINT m_uButtonState;
 		DWORD m_dwEditbkColor;
 		int m_iWindowStyls;
+
+		CDuiString m_sTipValue;
+		DWORD m_dwTipValueColor;
 
 		TDrawInfo m_diNormal;
 		TDrawInfo m_diHot;

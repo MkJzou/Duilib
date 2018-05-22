@@ -245,7 +245,7 @@ namespace DuiLib
 
 	CEditUI::CEditUI() : m_pWindow(NULL), m_uMaxChar(255), m_bReadOnly(false), 
 		m_bPasswordMode(false), m_cPasswordChar(_T('*')), m_bAutoSelAll(false), m_uButtonState(0), 
-		m_dwEditbkColor(0xFFFFFFFF), m_iWindowStyls(0)
+        m_dwEditbkColor(0xFFFFFFFF), m_iWindowStyls(0), m_dwTipValueColor(0xFFCDCDCD);
 	{
 		SetTextPadding(CDuiRect(4, 3, 4, 3));
 		SetBkColor(0xFFFFFFFF);
@@ -538,6 +538,26 @@ namespace DuiLib
 		return m_dwEditbkColor;
 	}
 
+	void CEditUI::SetTipValue(LPCTSTR pstrTipValue)
+	{
+		m_sTipValue	= pstrTipValue;
+	}
+
+	LPCTSTR CEditUI::GetTipValue()
+	{
+		return m_sTipValue.GetData();
+	}
+
+	void CEditUI::SetTipValueColor(DWORD clrColor)
+	{
+		m_dwTipValueColor = clrColor;
+	}
+
+	DWORD CEditUI::GetTipValueColor()
+	{
+		return m_dwTipValueColor;
+	}
+
 	void CEditUI::SetSel(long nStartChar, long nEndChar)
 	{
 		if( m_pWindow != NULL ) Edit_SetSel(*m_pWindow, nStartChar,nEndChar);
@@ -613,6 +633,14 @@ namespace DuiLib
 			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 			SetNativeEditBkColor(clrColor);
 		}
+        else if (_tcscmp(pstrName, _T("tipvalue")) == 0) SetTipValue(pstrValue);
+        else if (_tcscmp(pstrName, _T("tipvaluecolor")) == 0) { 
+		    if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+		    LPTSTR pstr = NULL;
+		    DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+            SetTipValueColor(clrColor);
+        }
+
 		else CLabelUI::SetAttribute(pstrName, pstrValue);
 	}
 
@@ -638,20 +666,32 @@ namespace DuiLib
 
 	void CEditUI::PaintText(HDC hDC)
 	{
+        DWORD dwTextColor;
 		if( m_dwTextColor == 0 ) m_dwTextColor = m_pManager->GetDefaultFontColor();
 		if( m_dwDisabledTextColor == 0 ) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
 
-		if( m_sText.IsEmpty() ) return;
+        if( m_sText.IsEmpty() && m_sTipValue.IsEmpty()) return;
 
-		CDuiString sText = m_sText;
-		if( m_bPasswordMode ) {
-			sText.Empty();
-			LPCTSTR p = m_sText.GetData();
-			while( *p != _T('\0') ) {
-				sText += m_cPasswordChar;
-				p = ::CharNext(p);
-			}
-		}
+	    CDuiString sText;
+        if (m_sText.IsEmpty())
+        {
+            sText = m_sTipValue;
+            dwTextColor = m_dwTipValueColor;
+        }
+        else
+        {
+            sText = m_sText;
+            dwTextColor = m_dwTextColor;
+
+		    if( m_bPasswordMode ) {
+			    sText.Empty();
+			    LPCTSTR p = m_sText.GetData();
+			    while( *p != _T('\0') ) {
+				    sText += m_cPasswordChar;
+				    p = ::CharNext(p);
+			    }
+		    }
+        }
 
 		RECT rc = m_rcItem;
 		rc.left += m_rcTextPadding.left;
@@ -659,7 +699,7 @@ namespace DuiLib
 		rc.top += m_rcTextPadding.top;
 		rc.bottom -= m_rcTextPadding.bottom;
 		if( IsEnabled() ) {
-			CRenderEngine::DrawText(hDC, m_pManager, rc, sText, m_dwTextColor, \
+			CRenderEngine::DrawText(hDC, m_pManager, rc, sText, dwTextColor, \
 				m_iFont, DT_SINGLELINE | m_uTextStyle);
 		}
 		else {

@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dui_d.lib winmm.lib comctl32.lib"
+				AdditionalDependencies="dui_d.lib"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\lib&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"

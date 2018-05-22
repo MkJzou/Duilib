@@ -17,7 +17,7 @@ LPCTSTR MainFrame::GetWindowClassName() const
 
 CDuiString MainFrame::GetSkinFolder()
 {
-	return  _T("");
+	return  _T("Make\\");
 }
 
 CDuiString MainFrame::GetSkinFile()
@@ -32,11 +32,20 @@ CDuiString MainFrame::GetZIPFileName() const
 
 UILIB_RESOURCETYPE MainFrame::GetResourceType() const
 {
-	return UILIB_ZIP;
+	return UILIB_FILE;
 }
 
 void MainFrame::InitWindow()
-{}
+{
+    CContainerUI *pContainer = static_cast<CContainerUI*>(m_PaintManager.FindControl("MainFram_SubContainer"));
+
+    CDialogBuilder builder;
+    CControlUI* pControlUI = builder.Create("01_Login.xml");
+    pContainer->Add(pControlUI);
+
+    pControlUI = builder.Create("02_Connect.xml");
+    pContainer->Add(pControlUI);
+}
 
 void MainFrame::OnFinalMessage(HWND hWnd)
 {
@@ -58,6 +67,10 @@ void MainFrame::Notify( TNotifyUI &msg )
 		else if (csName == _T("Btn_Min")) {
 			::ShowWindow(m_hWnd, SW_MINIMIZE);
 		}
+        else if (csName == _T("Btn_Login_Login")) {
+            CContainerUI *pContainer = static_cast<CContainerUI*>(m_PaintManager.FindControl("MainFram_SubContainer"));
+            pContainer->PageUp();
+        }
 	}
 
 }

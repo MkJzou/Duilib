@@ -279,8 +279,8 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	if (strResourcePath.IsEmpty())
 	{
 		strResourcePath=m_PaintManager.GetInstancePath();
-		strResourcePath+=GetSkinFolder().GetData();
 	}
+	strResourcePath+=GetSkinFolder().GetData();
 	m_PaintManager.SetResourcePath(strResourcePath.GetData());
 
 	switch(GetResourceType())
