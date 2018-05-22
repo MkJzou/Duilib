@@ -68,6 +68,16 @@
 #include <malloc.h>
 #include <stdio.h>
 
+#define _USE_GDIPLUS 1
+
+#ifdef _USE_GDIPLUS
+#include <GdiPlus.h>
+#pragma comment(lib,"gdiplus.lib")
+#endif
+
+#pragma comment( lib, "winmm.lib" )
+#pragma comment( lib, "comctl32.lib" )
+
 #include "Utils/Utils.h"
 #include "Utils/UIDelegate.h"
 #include "Core/UIDefine.h"

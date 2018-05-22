@@ -3,16 +3,11 @@
 
 #pragma once
 
-#define _USE_GDIPLUS 1
-
 #ifdef _USE_GDIPLUS
-#include <GdiPlus.h>
-#pragma comment( lib, "GdiPlus.lib" )
 using namespace Gdiplus;
 class DUILIB_API Gdiplus::RectF;
 struct DUILIB_API Gdiplus::GdiplusStartupInput;
 #endif
-
 
 namespace DuiLib
 {
@@ -101,10 +96,6 @@ namespace DuiLib
 		DWORD					m_dwTextShadowColorB;
 		DWORD					m_dwStrokeColor;
 		RectF					m_ShadowOffset;
-		ULONG_PTR				m_gdiplusToken;
-#ifdef _USE_GDIPLUS
-		GdiplusStartupInput		m_gdiplusStartupInput;
-#endif
 	};
 }
 

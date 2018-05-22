@@ -76,6 +76,9 @@ PFUNCUPDATELAYEREDWINDOW g_fUpdateLayeredWindow = NULL;
 
 HPEN m_hUpdateRectPen = NULL;
 
+int CPaintManagerUI::m_GdiPlusCount = 0;
+ULONG_PTR CPaintManagerUI::m_gdiplusToken;
+Gdiplus::GdiplusStartupInput CPaintManagerUI::m_pGdiplusStartupInput;
 HINSTANCE CPaintManagerUI::m_hResourceInstance = NULL;
 CDuiString CPaintManagerUI::m_pStrResourcePath;
 CDuiString CPaintManagerUI::m_pStrResourceZip;
@@ -280,6 +283,12 @@ HANDLE CPaintManagerUI::GetResourceZipHandle()
 void CPaintManagerUI::SetInstance(HINSTANCE hInst)
 {
     m_hInstance = hInst;
+
+    // 加载GDI+接口
+    if (0 == m_GdiPlusCount++) // 只有第一个窗口加载时，才能加载GDI+
+    {
+	    Gdiplus::GdiplusStartup(&m_gdiplusToken, &m_pGdiplusStartupInput, NULL);
+    }
 }
 
 void CPaintManagerUI::SetCurrentPath(LPCTSTR pStrPath)
@@ -1753,6 +1762,12 @@ void CPaintManagerUI::MessageLoop()
 
 void CPaintManagerUI::Term()
 {
+    //  卸载GDI+接口
+    if (0 == --m_GdiPlusCount) // 只有最后一个窗口关闭时，才能卸载GDI+
+    {
+	    Gdiplus::GdiplusShutdown(m_gdiplusToken);
+    }
+
     if( m_bCachedResourceZip && m_hResourceZip != NULL ) {
         CloseZip((HZIP)m_hResourceZip);
         m_hResourceZip = NULL;

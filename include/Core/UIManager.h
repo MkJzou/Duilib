@@ -42,7 +42,7 @@ typedef enum EVENTTYPE_UI
     UIEVENT_NOTIFY,
     UIEVENT_COMMAND,
     UIEVENT__LAST,
-};
+}EVENTTYPE_UI;
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -484,6 +484,9 @@ private:
 	bool m_bForceUseSharedRes;
 	TResInfo m_ResInfo;
 
+    static int m_GdiPlusCount;
+	static ULONG_PTR m_gdiplusToken;
+	static Gdiplus::GdiplusStartupInput m_pGdiplusStartupInput;
     //
 	static HINSTANCE m_hResourceInstance;
 	static CDuiString m_pStrResourcePath;
